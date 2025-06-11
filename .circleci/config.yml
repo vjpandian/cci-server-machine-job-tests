@@ -1,0 +1,39 @@
+version: 2.1
+
+parameters:
+  ttl-seconds:
+     type: string
+     default: "180"
+
+commands:
+  fetch-instance-metadata:
+      steps:
+        - run:
+            name: Fetch Subnet ID from EC2 metadata
+            command: |
+                TOKEN=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: << pipeline.parameters.ttl-seconds >>")
+                curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/network/interfaces/macs/$(curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/mac)/subnet-id
+        - run:
+            name: Fetch Instance type from EC2 metadata
+            command: |
+                TOKEN=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: << pipeline.parameters.ttl-seconds >>")
+                curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/instance-type
+
+jobs:
+  machine-medium:
+    machine: true
+    resource_class: medium
+    steps:
+      - checkout
+      - fetch-instance-metadata
+            
+
+workflows:
+  ec2-test:
+    when: 
+      condition:
+        or:
+            - equal: [ main, << pipeline.git.branch >> ]
+            - matches: { pattern: "^v$", value: << pipeline.git.tag >> }
+    jobs:
+      - machine-medium
