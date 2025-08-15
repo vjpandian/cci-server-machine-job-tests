@@ -1,6 +1,9 @@
 version: 2.1
 
 parameters:
+  environment:
+     type: string
+     default: "ra-my-app-prod"
   ttl-seconds:
      type: string
      default: "180"
@@ -14,6 +17,13 @@ parameters:
 commands:
   fetch-instance-metadata:
       steps:
+        - when:
+            condition:
+              or:
+               - and:
+                   - matches: { pattern: "^ra-[a-z0-9-]+$", value: << pipeline.parameters.environment >> }
+            steps:
+               - run: echo "this step means it is running on env match!"
         - run:
             name: Fetch Subnet ID from EC2 metadata
             command: |
@@ -35,6 +45,15 @@ jobs:
             
 
 workflows:
+  env-match:
+    when: 
+      condition:
+        or:
+            - equal: [ main, << pipeline.git.branch >> ]
+            - matches: { pattern: "^ra-[a-z0-9-]+$", value: << pipeline.parameters.environment >> }
+    jobs:
+      - machine-medium
+      
   ec2-test:
     when: 
       condition:
