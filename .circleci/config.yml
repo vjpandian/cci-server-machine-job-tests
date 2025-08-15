@@ -4,18 +4,9 @@ parameters:
   environment:
      type: string
      default: "ra-my-app-test"
-  ttl-seconds:
-     type: string
-     default: "180"
-  metadata-endpoint:
-     type: string
-     default: "http://169.254.169.254/latest/meta-data"
-  api-token-endpoint:
-     type: string
-     default: "http://169.254.169.254/latest/api/token"
 
 commands:
-  fetch-instance-metadata:
+  param-command:
       steps:
         - when:
             condition:
@@ -23,25 +14,20 @@ commands:
                - and:
                    - matches: { pattern: "^ra-[a-z0-9-]+$", value: << pipeline.parameters.environment >> }
             steps:
-               - run: echo "this step means it is running on env match!"
+               - run: 
+                   name: If this step runs then the condition matched!
+                   command: echo "this step means it is running on env match!"
         - run:
             name: Fetch Subnet ID from EC2 metadata
             command: |
-                TOKEN=$(curl -X PUT "<<pipeline.parameters.api-token-endpoint>>" -H "X-aws-ec2-metadata-token-ttl-seconds: << pipeline.parameters.ttl-seconds >>")
-                curl -H "X-aws-ec2-metadata-token: $TOKEN" <<pipeline.parameters.metadata-endpoint>>/network/interfaces/macs/$(curl -H "X-aws-ec2-metadata-token: $TOKEN" <<pipeline.parameters.metadata-endpoint>>/mac)/subnet-id
-        - run:
-            name: Fetch Instance type from EC2 metadata
-            command: |
-                TOKEN=$(curl -X PUT "<<pipeline.parameters.api-token-endpoint>>" -H "X-aws-ec2-metadata-token-ttl-seconds: << pipeline.parameters.ttl-seconds >>")
-                curl -H "X-aws-ec2-metadata-token: $TOKEN" <<pipeline.parameters.metadata-endpoint>>/instance-type
-
+                echo "this is another step"
 jobs:
   machine-medium:
     machine: true
     resource_class: medium
     steps:
       - checkout
-      - fetch-instance-metadata
+      - param-command
             
 
 workflows:
