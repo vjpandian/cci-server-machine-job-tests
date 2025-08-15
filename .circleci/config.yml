@@ -3,7 +3,7 @@ version: 2.1
 parameters:
   environment:
      type: string
-     default: "ra-my-app-prod"
+     default: "ra-my-app-test"
   ttl-seconds:
      type: string
      default: "180"
