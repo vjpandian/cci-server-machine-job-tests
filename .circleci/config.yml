@@ -48,8 +48,7 @@ workflows:
   env-match:
     when: 
       condition:
-        or:
-            - equal: [ main, << pipeline.git.branch >> ]
+        and:
             - matches: { pattern: "^ra-[a-z0-9-]+$", value: << pipeline.parameters.environment >> }
     jobs:
       - machine-medium
