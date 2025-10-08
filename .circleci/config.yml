@@ -43,7 +43,7 @@ jobs:
     docker:
       - image: 992382483259.dkr.ecr.us-east-1.amazonaws.com/fieldeng-custom-docker:latest
         aws_auth: 
-          oidc_role_arn: <<pipeline.parameters.ecr-role>>
+          oidc_role_arn: arn:aws:iam::992382483259:role/staging_fieldeng_ecr_pull_role
     steps:
       - checkout
       - setup_remote_docker
