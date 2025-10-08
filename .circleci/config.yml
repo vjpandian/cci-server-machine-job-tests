@@ -39,13 +39,15 @@ commands:
                 curl -H "X-aws-ec2-metadata-token: $TOKEN" <<pipeline.parameters.metadata-endpoint>>/instance-type
 
 jobs:
-  docker-oidc:
+  docker-oidc-remote-docker:
     docker:
       - image: 992382483259.dkr.ecr.us-east-1.amazonaws.com/fieldeng-custom-docker:latest
         aws_auth: 
           oidc_role_arn: <<pipeline.parameters.ecr-role>>
     steps:
       - checkout
+      - setup_remote_docker
+      - run: echo "hello"
           
   machine-medium:
     machine: true
@@ -73,3 +75,4 @@ workflows:
             - matches: { pattern: "^v$", value: << pipeline.git.tag >> }
     jobs:
       - machine-medium
+      - docker-oidc-remote-docker
