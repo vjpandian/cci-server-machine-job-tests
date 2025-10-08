@@ -1,6 +1,9 @@
 version: 2.1
 
 parameters:
+  ecr-role:
+     type: string
+     default: "arn:aws:iam::992382483259:role/fieldeng_aws_ci_role"
   environment:
      type: string
      default: "ra-my-app-prod"
@@ -36,6 +39,14 @@ commands:
                 curl -H "X-aws-ec2-metadata-token: $TOKEN" <<pipeline.parameters.metadata-endpoint>>/instance-type
 
 jobs:
+  docker-oidc:
+    docker:
+      - image: 992382483259.dkr.ecr.us-east-1.amazonaws.com/fieldeng-custom-docker:latest
+        aws_auth: 
+          oidc_role_arn: <<pipeline.parameters.ecr-role>>
+    steps:
+      - checkout
+          
   machine-medium:
     machine: true
     resource_class: medium
