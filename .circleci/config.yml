@@ -3,7 +3,7 @@ version: 2.1
 parameters:
   ecr-role:
      type: string
-     default: "arn:aws:iam::992382483259:role/fieldeng_aws_ci_role"
+     default: "arn:aws:iam::992382483259:role/fieldeng_aws_ci_oidc_oauth_role"
   environment:
      type: string
      default: "ra-my-app-prod"
