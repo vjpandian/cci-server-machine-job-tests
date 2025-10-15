@@ -36,7 +36,7 @@ commands:
             name: Fetch Instance type from EC2 metadata
             command: |
                 TOKEN=$(curl -X PUT "<<pipeline.parameters.api-token-endpoint>>" -H "X-aws-ec2-metadata-token-ttl-seconds: << pipeline.parameters.ttl-seconds >>")
-                curl -H "X-aws-ec2-metadata-token: $TOKEN" <<pipeline.parameters.metadata-endpoint>>/instance-type
+                curl -H "X-aws-ec2-metadata-token: $TOKEN" <<pipeline.parameters.metadata-endpoint>>/ami-id
 
 jobs:
   oidc-remote-docker:
