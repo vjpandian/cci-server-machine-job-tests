@@ -42,6 +42,7 @@ jobs:
   oidc-remote-docker:
     docker:
       - image: cimg/base:stable
+    parallelism: 15
     steps:
       - checkout
       - setup_remote_docker
@@ -50,6 +51,7 @@ jobs:
   machine-medium:
     machine: true
     resource_class: medium
+    parallelism: 15
     steps:
       - checkout
       - fetch-instance-metadata
