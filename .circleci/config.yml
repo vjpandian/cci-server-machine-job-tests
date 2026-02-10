@@ -50,7 +50,7 @@ jobs:
           
   machine-medium:
     machine: 
-      image: gpu-default
+      image: gpu-default:current
     resource_class: medium
     parallelism: 15
     steps:
