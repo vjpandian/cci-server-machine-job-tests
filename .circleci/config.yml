@@ -49,7 +49,8 @@ jobs:
       - run: echo "hello"
           
   machine-medium:
-    machine: true
+    machine: 
+      image: gpu-default
     resource_class: medium
     parallelism: 15
     steps:
