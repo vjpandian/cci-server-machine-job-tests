@@ -50,7 +50,7 @@ jobs:
           
   machine-medium:
     machine: 
-      image: gpu-default:current
+      image: ubuntu-imagefactory-default
     resource_class: medium
     parallelism: 15
     steps:
